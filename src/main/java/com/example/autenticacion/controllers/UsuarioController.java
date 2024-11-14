@@ -33,8 +33,8 @@ public class UsuarioController {
 
     // Endpoint para autenticar un usuario
     @PostMapping("/login")
-    public Usuario autenticarUsuario(@RequestParam String email, @RequestParam String password) {
-        return usuarioService.autenticarUsuario(email, password);
+    public Usuario autenticarUsuario(@RequestBody Usuario credenciales) {
+        return usuarioService.autenticarUsuario(credenciales.getEmail(), credenciales.getPassword());
     }
 }
 
