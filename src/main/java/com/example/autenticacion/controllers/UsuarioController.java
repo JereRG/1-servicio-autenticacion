@@ -3,10 +3,11 @@ package com.example.autenticacion.controllers;
 import com.example.autenticacion.models.Usuario;
 import com.example.autenticacion.services.UsuarioService;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -27,14 +28,26 @@ public class UsuarioController {
 
     // Endpoint para registrar un nuevo usuario
     @PostMapping("/registrar")
-    public Usuario registrarUsuario(@RequestBody Usuario usuario) {
-        return usuarioService.registrarUsuario(usuario);
+    public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
+        // Registrar al usuario
+        Usuario usuarioRegistrado = usuarioService.registrarUsuario(usuario);
+
+        // Devolver solo el id del usuario
+        return ResponseEntity.ok(usuarioRegistrado.getId()); // Solo el id del usuario
     }
 
     // Endpoint para autenticar un usuario
     @PostMapping("/login")
-    public Usuario autenticarUsuario(@RequestBody Usuario credenciales) {
-        return usuarioService.autenticarUsuario(credenciales.getEmail(), credenciales.getPassword());
+    public ResponseEntity<?> autenticarUsuario(@RequestBody Usuario credenciales) {
+        // Autenticar al usuario utilizando las credenciales
+        Usuario usuarioAutenticado = usuarioService.autenticarUsuario(credenciales.getEmail(), credenciales.getPassword());
+
+        // Verificar si el usuario fue encontrado y la autenticación fue exitosa
+        if (usuarioAutenticado == null) {
+            return ResponseEntity.status(401).body("Credenciales inválidas");
+        }
+
+        // Si el usuario se autentica correctamente, devolvemos el id
+        return ResponseEntity.ok(usuarioAutenticado.getId()); // Solo el id del usuario
     }
 }
-
