@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -28,12 +29,12 @@ public class UsuarioController {
 
     // Endpoint para registrar un nuevo usuario
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
         // Registrar al usuario
         Usuario usuarioRegistrado = usuarioService.registrarUsuario(usuario);
 
-        // Devolver solo el id del usuario
-        return ResponseEntity.ok(usuarioRegistrado.getId()); // Solo el id del usuario
+        // Devolver un objeto JSON con el id del usuario
+        return ResponseEntity.ok().body(Collections.singletonMap("id", usuarioRegistrado.getId()));
     }
 
     // Endpoint para autenticar un usuario
